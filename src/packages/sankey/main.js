@@ -1,4 +1,5 @@
 import { getFormated } from '../../utils'
+import { itemPoint } from '../../echarts-base'
 import 'echarts/lib/chart/sankey'
 
 function getTooltip (args) {
@@ -10,10 +11,15 @@ function getTooltip (args) {
   return {
     trigger: 'item',
     formatter (item) {
-      const { data, marker, value, name } = item
-      return data && data.source
-        ? `${name}: ${getFormated(value, linksDataType, digit)}`
-        : `${marker} ${name}: ${getFormated(value, itemDataType, digit)}`
+      const tpl = []
+      tpl.push(itemPoint(item.color))
+      tpl.push(`${item.name} : `)
+      if (item.data && item.data.source) {
+        tpl.push(`${getFormated(item.value, linksDataType, digit)}<br />`)
+      } else {
+        tpl.push(`${getFormated(item.value, itemDataType, digit)}<br />`)
+      }
+      return tpl.join('')
     }
   }
 }
